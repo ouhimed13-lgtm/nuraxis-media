@@ -1,10 +1,69 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NURAXIS — The Visibility Grid</title>
-<style>*{box-sizing:border-box;margin:0}body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;font-family:Inter,system-ui,sans-serif;background:linear-gradient(160deg,#0A2540,#0E3560);color:#fff}
-main{max-width:460px;width:100%}.tag{font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#5CC8FF}
-h1{font-size:40px;line-height:1.05;letter-spacing:-.03em;margin:18px 0}h1 span{color:#5CC8FF}p{font-size:18px;line-height:1.45;color:#D6E6FA;margin-bottom:28px}
-a.btn{display:block;text-align:center;background:#5CC8FF;color:#0A2540;font-weight:800;font-size:18px;padding:18px;border-radius:14px;text-decoration:none}
-small{display:block;margin-top:18px;color:#8FB4E0;font-size:13px}</style></head><body><main>
-<div class="tag">NURAXIS</div><h1>Score yourself <span>out of 25.</span></h1>
-<p>The Visibility Grid: five rows, one honest score. A free self-check for pharma reps who want to be seen.</p>
-<a class="btn" href="https://form.jotform.com/263003159160043">Get the free grid</a>
-<small>Free. Unsubscribe at any time.</small></main></body></html>
+<meta name="description" content="Score yourself out of 25. A free self-check for pharma reps who want to be seen.">
+<style>
+:root{--navy:#0A2540;--navy2:#0E3560;--cyan:#5CC8FF;--blue:#0B5BD3;--tint:#EAF2FF;--ink:#0B1B2B;--mut:#556577;--line:#D8E3F3}
+*{box-sizing:border-box;margin:0}
+body{font-family:Inter,system-ui,sans-serif;background:linear-gradient(160deg,var(--navy),var(--navy2));min-height:100vh;color:#fff;padding:20px 16px 48px}
+main{max-width:520px;margin:0 auto}
+.tag{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin:8px 0 14px}
+h1{font-size:38px;line-height:1.05;letter-spacing:-.03em}h1 span{color:var(--cyan)}
+.lead{font-size:17px;line-height:1.45;color:#D6E6FA;margin:14px 0 22px}
+.card{background:#fff;color:var(--ink);border-radius:18px;padding:20px;margin-bottom:14px}
+.card h2{font-size:21px;letter-spacing:-.02em}.card p{color:var(--mut);font-size:15px;line-height:1.4;margin:4px 0 14px}
+.scale{display:flex;gap:8px}.scale input{position:absolute;opacity:0;pointer-events:none}
+.scale label{flex:1;text-align:center;padding:13px 0;border:2px solid var(--blue);border-radius:50%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--blue);cursor:pointer;max-width:56px}
+.scale input:checked+label{background:var(--blue);color:#fff}
+.scale input:focus-visible+label{outline:3px solid var(--cyan);outline-offset:2px}
+.ends{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-top:8px}
+button,.btn{display:block;width:100%;text-align:center;background:var(--cyan);color:var(--navy);font-weight:800;font-size:18px;padding:17px;border:0;border-radius:14px;cursor:pointer;text-decoration:none;font-family:inherit}
+button:disabled{opacity:.45;cursor:not-allowed}
+#result{display:none}.score{font-size:64px;font-weight:800;letter-spacing:-.04em;color:var(--blue);line-height:1}.score small{font-size:26px;color:var(--mut)}
+.res h3{font-size:19px;margin:18px 0 6px}.res .row{font-weight:700}
+.bars{margin-top:14px}.bar{display:flex;align-items:center;gap:10px;font-size:14px;margin:6px 0}.bar b{width:92px;font-weight:600}.bar i{flex:1;height:10px;background:var(--line);border-radius:6px;overflow:hidden}.bar i em{display:block;height:100%;background:var(--blue)}.bar.low i em{background:#E5484D}
+.note{font-size:13px;color:#8FB4E0;margin-top:14px;text-align:center}
+iframe{width:100%;height:560px;border:0;border-radius:14px;background:#fff;margin-top:6px}
+.err{color:#ffb4b4;font-size:14px;margin-bottom:10px;display:none}
+</style></head><body><main>
+<div class="tag">NURAXIS · Pharma Rep to Leader</div>
+<h1>Score yourself <span>out of 25.</span></h1>
+<p class="lead">Five rows. One honest score. A free self-check for pharma reps who want to be seen. Rate each row from 1 (never) to 5 (always). Takes two minutes.</p>
+<form id="quiz" novalidate></form>
+<div class="err" id="err">Please rate all five rows.</div>
+<button id="go" type="button">See my score</button>
+<section id="result" class="card res" aria-live="polite">
+  <div class="score"><span id="total">0</span><small> / 25</small></div>
+  <h3 id="band"></h3><p id="bandtxt" style="color:var(--mut);font-size:15px;line-height:1.45"></p>
+  <div class="bars" id="bars"></div>
+  <h3>Your lowest row: <span class="row" id="lowname"></span></h3>
+  <p id="lowtxt" style="color:var(--ink);font-size:15px;line-height:1.5"></p>
+  <h3>Get your 30-day plan for this row</h3>
+  <p style="color:var(--mut);font-size:14px;margin:0 0 8px">Free. Pick your lowest row in the form and we send you the plan. Score yourself again in 30 days.</p>
+  <iframe title="Get your plan" src="https://form.jotform.com/263003159160043" loading="lazy"></iframe>
+  <p class="note" style="color:var(--mut)">Your ratings stay on this page. Only what you type in the form is sent to us.</p>
+</section>
+</main>
+<script>
+const R=[
+{k:"Visibility",q:"Those who decide know what I do.",a:"This week, send your manager one short written update with a result and a number. Do it every Friday for a month. People cannot back what they cannot see."},
+{k:"Showcasing",q:"I present my work and its results. I do not let people guess.",a:"Pick one result from the last quarter and write it in three lines: the situation, what you did, the outcome. Keep it ready for your next meeting with your manager."},
+{k:"Speaking",q:"In meetings, I say clearly and with impact what I have to say.",a:"Before your next meeting, write your one key point in a single sentence. Speak it first, in the first few minutes, before the discussion moves on."},
+{k:"Questions",q:"I ask the right questions to the right people.",a:"Prepare two questions for your next conversation with someone senior: one about their priorities, one about what success looks like in their role. Then listen."},
+{k:"Clear ask",q:"I tell people what I want.",a:"Write one sentence that says the role or responsibility you want next. Say it to your manager in your next one-to-one. Asking clearly is a skill, not a risk."}];
+const B=[[21,"Strong visibility","You already make your work known. The risk now is plateauing. Keep your lowest row moving."],[15,"Solid, with a clear gap","The foundation is there. One row is holding you back. Fix that one first."],[10,"Visible to few people","Your work is probably better known by your results than by your voice. Start with your lowest row."],[0,"Mostly invisible right now","Good work that nobody can describe does not get promoted. This is learnable. Start with your lowest row."]];
+const f=document.getElementById("quiz");
+R.forEach((r,i)=>{f.insertAdjacentHTML("beforeend",`<fieldset class="card" style="border:0"><h2>${i+1}. ${r.k}</h2><p>${r.q}</p><div class="scale">${[1,2,3,4,5].map(n=>`<input type="radio" name="r${i}" id="r${i}_${n}" value="${n}"><label for="r${i}_${n}">${n}</label>`).join("")}</div><div class="ends"><span>1 = never</span><span>5 = always</span></div></fieldset>`)});
+document.getElementById("go").onclick=()=>{
+ const v=R.map((_,i)=>{const c=f.querySelector(`input[name=r${i}]:checked`);return c?+c.value:0});
+ const err=document.getElementById("err");
+ if(v.includes(0)){err.style.display="block";return}
+ err.style.display="none";
+ const t=v.reduce((a,b)=>a+b,0),m=Math.min(...v),li=v.indexOf(m),b=B.find(x=>t>=x[0]);
+ document.getElementById("total").textContent=t;
+ document.getElementById("band").textContent=b[1];document.getElementById("bandtxt").textContent=b[2];
+ document.getElementById("lowname").textContent=R[li].k;document.getElementById("lowtxt").textContent=R[li].a;
+ document.getElementById("bars").innerHTML=R.map((r,i)=>`<div class="bar ${i===li?"low":""}"><b>${r.k}</b><i><em style="width:${v[i]*20}%"></em></i><span>${v[i]}</span></div>`).join("");
+ const res=document.getElementById("result");res.style.display="block";
+ document.getElementById("go").style.display="none";f.style.display="none";
+ res.scrollIntoView({behavior:"smooth"});
+};
+</script></body></html>
